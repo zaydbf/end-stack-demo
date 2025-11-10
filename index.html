@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Endian & Stack Demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome Hackers</h1>
+  </header>
+
+  <!-- Endianness -->
+  <section id="endian">
+    <h2>Endianness</h2>
+    <table id="endian-table">
+      <thead>
+        <tr>
+          <th>Address</th>
+          <th>0</th><th>1</th><th>2</th><th>3</th>
+          <th>4</th><th>5</th><th>6</th><th>7</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="little-row">
+          <td>Little Endian</td>
+        </tr>
+        <tr id="big-row">
+          <td>Big Endian</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="address-value" id="addressValue">Address Value: 0x0011223344556677</div>
+
+    <div class="controls">
+      <button class="btn btn-green" id="loadAddress">Load Address</button>
+      <button class="btn btn-outline" id="resetEndian">Reset</button>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- Stack -->
+  <section id="stack">
+    <h2>The Stack</h2>
+
+    <table id="stackTable"></table>
+
+    <div class="label-input">
+      <label for="rax">rax:</label>
+      <input type="text" id="rax" />
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-green" id="push">Push rax</button>
+      <button class="btn btn-dark" id="pop">Pop rax</button>
+      <button class="btn btn-outline" id="resetStack">Reset</button>
+    </div>
+  </section>
+  <script src="script.js"></script>
+</body>
+</html>
