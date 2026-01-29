@@ -77,3 +77,78 @@ document.getElementById("resetStack").addEventListener("click", () => {
     raxInput.value = "";
     renderStack();
 });
+
+// ---------------- Stack Buffer Overflow Logic ----------------
+
+
+let overflowStack = ["0x401000", "0x12345678"]; 
+const overflowTable = document.getElementById("overflowTable");
+const overflowInput = document.getElementById("overflowInput");
+
+function renderOverflow() {
+    const visibleStack = Array(5 - overflowStack.length).fill("--").concat(overflowStack);
+    
+    overflowTable.innerHTML = visibleStack.map((addr, i) => {
+      
+        const stackIndex = i - (5 - overflowStack.length);
+        const isRsp = stackIndex === 0;
+        const isRet = (overflowStack.length >= 2 && stackIndex === overflowStack.length - 2); 
+        const isRbp = (stackIndex === overflowStack.length - 1);
+
+        let note = "";
+        let style = "";
+
+        if (isRsp && addr !== "--") note = "&lt;-- Top of Stack ($rsp)";
+        else if (isRet) {
+             note = "&lt;-- Return Address ($rip)";
+             if (addr !== "0x401000") {
+                 style = "color: red; font-weight: bold;";
+                 note = "&lt; ($rip overwritten)";
+             }
+        }
+        else if (isRbp) note = "&lt;-- Bottom of Stack ($rbp)";
+
+        return `
+            <tr>
+                <td class="stack-cell" style="${style}">${addr}</td>
+                <td class="stack-cell" style="text-align:left; ${style}">${note}</td>
+            </tr>`;
+    }).join("");
+}
+
+renderOverflow();
+
+document.getElementById("overflowPush").addEventListener("click", () => {
+    const val = overflowInput.value;
+    if (val && overflowStack.length < 5) {
+        
+        const chunks = val.match(/.{1,8}/g) || [];
+        
+
+        const firstChunk = chunks.shift();
+        overflowStack.unshift(firstChunk); 
+
+        chunks.forEach((chunk, i) => {
+            if (i + 1 < overflowStack.length) {
+                overflowStack[i + 1] = chunk;
+            }
+        });
+
+        overflowInput.value = "";
+        renderOverflow();
+    }
+});
+
+document.getElementById("overflowPop").addEventListener("click", () => {
+    if (overflowStack.length > 0) {
+        const popped = overflowStack.shift();
+        overflowInput.value = popped;
+        renderOverflow();
+    }
+});
+
+document.getElementById("overflowReset").addEventListener("click", () => {
+    overflowStack = ["0x401000", "0x12345678"];
+    overflowInput.value = "";
+    renderOverflow();
+});
